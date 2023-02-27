@@ -2,14 +2,15 @@ package com.example.android.unscramble.ui.game
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.fragment.app.viewModels
 
 class GameViewModel : ViewModel() {
 
     private var wordsList: MutableList<String> = mutableListOf()
     private lateinit var currentWord: String
 
-    private var currentWordCount = 0
+    private var _currentWordCount = 0
+    val currentWordCount: Int
+        get() = _currentWordCount
 
     private var _score = 0
     val score: Int
@@ -43,13 +44,13 @@ class GameViewModel : ViewModel() {
             getNextWord()
         } else {
             _currentScrambledWord = String(tempWord)
-            ++currentWordCount
+            ++_currentWordCount
             wordsList.add(currentWord)
         }
     }
 
     fun nextWord(): Boolean {
-        return if (currentWordCount < MAX_NO_OF_WORDS) {
+        return if (_currentWordCount < MAX_NO_OF_WORDS) {
             getNextWord()
             true
         } else false
@@ -66,5 +67,12 @@ class GameViewModel : ViewModel() {
             return true
         }
         return false
+    }
+
+    fun reinitializeData() {
+        _currentWordCount = 0
+        _score = 0
+        wordsList.clear()
+        getNextWord()
     }
 }
